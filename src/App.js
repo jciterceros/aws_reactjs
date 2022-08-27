@@ -1,40 +1,58 @@
-import logo from "./logo.svg";
-import "./App.css";
+import React, { useEffect, useState } from "react";
+import GlobalStyle from "./styles/global";
+import Header from "./components/Header";
+import Card from "./components/Card";
+import Form from "./components/Form";
 
-function App() {
-    return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>Hello world</p>
-            </header>
-            <div>
-                create calculator here
-                <div>
-                    <input type="text" />
-                    <button>1</button>
-                    <button>2</button>
-                    <button>3</button>
-                    <button>4</button>
-                    <button>5</button>
-                    <button>6</button>
-                    <button>7</button>
-                    <button>8</button>
-                    <button>9</button>
-                    <button>0</button>
-                    <button>+</button>
-                    <button>-</button>
-                    <button>*</button>
-                    <button>/</button>
-                    <button>=</button>
-                </div>
-                <div>
-                    <input type="text" />
-                    <button>=</button>
-                </div>
-            </div>
-        </div>
-    );
-}
+//import "./App.css";
+
+const App = () => {
+  const data = localStorage.getItem("transactions");
+  const [transactionsList, setTransactionsList] = useState(
+    data ? JSON.parse(data) : []
+  );
+  const [income, setIncome] = useState(0);
+  const [expense, setExpense] = useState(0);
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    const amountExpense = transactionsList
+      .filter((item) => item.expense)
+      .map((transaction) => Number(transaction.amount));
+
+    const amountIncome = transactionsList
+      .filter((item) => !item.expense)
+      .map((transaction) => Number(transaction.amount));
+
+    const expense = amountExpense.reduce((acc, cur) => acc + cur, 0).toFixed(2);
+    const income = amountIncome.reduce((acc, cur) => acc + cur, 0).toFixed(2);
+
+    const total = Math.abs(income - expense).toFixed(2);
+
+    setIncome(`R$ ${income}`);
+    setExpense(`R$ ${expense}`);
+    setTotal(`${Number(income) < Number(expense) ? "-" : ""}R$ ${total}`);
+  }, [transactionsList]);
+
+  const handleAdd = (transaction) => {
+    const newArrayTransactions = [...transactionsList, transaction];
+
+    setTransactionsList(newArrayTransactions);
+
+    localStorage.setItem("transactions", JSON.stringify(newArrayTransactions));
+  };
+  return (
+    <>
+      <Header />
+      <Card income={income} expense={expense} total={total} />
+      <Form
+        handleAdd={handleAdd}
+        transactionsList={transactionsList}
+        setTransactionsList={setTransactionsList}
+      />
+      <GlobalStyle />
+    </>
+  );
+};
 
 export default App;
