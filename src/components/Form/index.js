@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import DatePicker from "react-datepicker";
 import Grid from "../Grid";
 import * as C from "./styles";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Form = ({ handleAdd, transactionsList, setTransactionsList }) => {
+  const [startDate, setStartDate] = useState(new Date());
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("");
   const [isExpense, setExpense] = useState(false);
@@ -10,6 +13,10 @@ const Form = ({ handleAdd, transactionsList, setTransactionsList }) => {
   const generateID = () => Math.round(Math.random() * 1000);
 
   const handleSave = () => {
+    if (!startDate) {
+      alert("Please select a date");
+      return;
+    }
     if (!desc || !amount) {
       alert("Informe a descrição e o valor!");
       return;
@@ -20,6 +27,7 @@ const Form = ({ handleAdd, transactionsList, setTransactionsList }) => {
 
     const transaction = {
       id: generateID(),
+      timestamp: startDate.toLocaleString("pt-br", { dateStyle: "short" }), //new Date().toLocaleString("pt-br", { dateStyle: "short" }),
       desc: desc,
       amount: amount,
       expense: isExpense,
@@ -34,6 +42,16 @@ const Form = ({ handleAdd, transactionsList, setTransactionsList }) => {
   return (
     <>
       <C.Container>
+        <C.InputContent>
+          <C.Label>Data</C.Label>
+          <C.DatePicker>
+            <DatePicker
+              className="datepicker"
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+            />
+          </C.DatePicker>
+        </C.InputContent>
         <C.InputContent>
           <C.Label>Descrição</C.Label>
           <C.Input value={desc} onChange={(e) => setDesc(e.target.value)} />

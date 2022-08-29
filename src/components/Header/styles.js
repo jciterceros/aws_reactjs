@@ -12,3 +12,7 @@ export const Title = styled.div`
   padding-top: 20px;
   color: #fff;
 `;
+
+export const Content = styled.div`
+  color: #fff;
+`;

@@ -16,6 +16,20 @@ export const Container = styled.div`
   }
 `;
 
+export const DatePicker = styled.div`
+  outline: none;
+  border-radius: 5px;
+  padding: 2px 10px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  .datepicker {
+    border: none;
+  }
+  .datepicker:hover {
+    cursor: pointer;
+  }
+`;
+
 export const InputContent = styled.div`
   display: flex;
   flex-direction: column;
