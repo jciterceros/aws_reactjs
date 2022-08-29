@@ -9,6 +9,12 @@ const Grid = ({ itens, setItens }) => {
     localStorage.setItem("transactions", JSON.stringify(newArray));
   };
 
+  const sortedAsc = itens.sort((a, b) =>
+    a.timestamp > b.timestamp ? 1 : b.timestamp > a.timestamp ? -1 : 0
+  );
+  itens = sortedAsc;
+  // console.log(sortedAsc);
+  // console.log(itens.map((item) => item.timestamp).sort());
   return (
     <C.Table>
       <C.Thead>
